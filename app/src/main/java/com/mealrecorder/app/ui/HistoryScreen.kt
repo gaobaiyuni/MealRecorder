@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,8 +56,8 @@ fun HistoryScreen(
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy年M月d日")
     val isoFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
-    val meals by viewModel.historyMeals
-    val recordedDates by viewModel.recordedDates
+    val meals by viewModel.historyMeals.collectAsState()
+    val recordedDates by viewModel.recordedDates.collectAsState()
 
     LaunchedEffect(selectedDate) {
         viewModel.loadHistory(selectedDate.format(isoFormatter))

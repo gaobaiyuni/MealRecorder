@@ -22,6 +22,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -151,7 +152,7 @@ fun MealRecorderApp(viewModel: MealViewModel = viewModel()) {
                 .padding(padding)
         ) {
             if (currentTab == 0) {
-                val meals by viewModel.todayMeals
+                val meals by viewModel.todayMeals.collectAsState()
                 MealListContent(
                     dateTitle = "今天 · " + viewModel.todayDateString(),
                     meals = meals,
