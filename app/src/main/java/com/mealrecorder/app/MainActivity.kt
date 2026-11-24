@@ -67,15 +67,6 @@ fun MealRecorderApp(viewModel: MealViewModel = viewModel()) {
     // 拍照临时 URI
     var cameraUri by remember { mutableStateOf<android.net.Uri?>(null) }
 
-    // 相机权限请求
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) {
-            cameraUri?.let { launchCamera(it) }
-        }
-    }
-
     // 拍照结果
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
@@ -98,6 +89,15 @@ fun MealRecorderApp(viewModel: MealViewModel = viewModel()) {
 
     fun launchCamera(uri: android.net.Uri) {
         takePictureLauncher.launch(uri)
+    }
+
+    // 相机权限请求
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            cameraUri?.let { launchCamera(it) }
+        }
     }
 
     fun handleTakePhoto() {
