@@ -27,10 +27,19 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --no-daemon --console=plain 2>&1 | tee build-log.txt
+        continue-on-error: true
 
-      - name: List APK output
-        run: find app/build/outputs -type f 2>/dev/null || echo "no output dir"
+      - name: Annotate build errors
+        if: always()
+        run: |
+          # 把 gradle 的编译错误行转成 GitHub annotation，便于诊断
+          while IFS= read -r line; do
+            echo "$line" | grep -qE "^e: |error:|FAILED|What went wrong|Could not resolve|Unresolved reference" && echo "::error::${line}"
+          done < build-log.txt
+          echo "done"
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
